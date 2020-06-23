@@ -9,7 +9,7 @@ class MultipleDescendantTree {
   String toJson(Node root) {
     var json = '[\n';
     bfs([root], (node) {
-      json += '\t' + save(node) + ',\n';
+      json += '\t' + serialize(node) + ',\n';
     });
     // Removes the last comma
     json = json.substring(0, json.lastIndexOf(','));
@@ -36,19 +36,19 @@ class MultipleDescendantTree {
     }
   }
 
-  String save(Node node) {
+  String serialize(Node node) {
     var children = [];
     node.children.forEach((element) {
       children.add(json.encode(element.id));
     });
     ;
-    final saved =
+    final serialized =
         '{"id":"${node.id}", "data":"${node.data}", "children":$children}';
-    return saved;
+    return serialized;
   }
 
   List<Node> load() {
-    final saved = '''[
+    final serialized = '''[
 	{"id":"0", "data":"0", "children":[1, 2]},
 	{"id":"1", "data":"1", "children":[3, 4]},
 	{"id":"2", "data":"2", "children":[5, 6]},
@@ -58,7 +58,7 @@ class MultipleDescendantTree {
 	{"id":"6", "data":"6", "children":[]}
 ]''';
 
-    final  nodesMapList = json.decode(saved);
+    final  nodesMapList = json.decode(serialized);
     final nodes = <Node>[];
     nodesMapList.forEach((nodeMap) {
       var node = Node(id: int.parse(nodeMap['id']), data: nodeMap['data']); 

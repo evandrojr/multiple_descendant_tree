@@ -36,7 +36,7 @@ void main() {
       t.root.children[0].addChild(nodeFactory());
       t.root.children[1].addChild(nodeFactory());
       t.root.children[1].addChild(nodeFactory());
-      t.bfs([t.root], (x) => t.save(x));
+      t.bfs([t.root], (x) => t.serialize(x));
     });
 
     test('toJson()', () {
