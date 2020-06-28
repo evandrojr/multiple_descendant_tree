@@ -47,51 +47,41 @@ class MultipleDescendantTree {
     return serialized;
   }
 
-  List<Node> load() {
-    final serialized = '''[
-	{"id":"0", "data":"0", "children":[1, 2]},
-	{"id":"1", "data":"1", "children":[3, 4]},
-	{"id":"2", "data":"2", "children":[5, 6]},
-	{"id":"3", "data":"3", "children":[]},
-	{"id":"4", "data":"4", "children":[]},
-	{"id":"5", "data":"5", "children":[]},
-	{"id":"6", "data":"6", "children":[]}
-]''';
-
-    final  nodesMapList = json.decode(serialized);
+  List<Node> load(String serialized) {
+    final nodesMapList = json.decode(serialized);
     final nodes = <Node>[];
     nodesMapList.forEach((nodeMap) {
-      var node = Node(id: int.parse(nodeMap['id']), data: nodeMap['data']); 
-      nodeMap['children'].forEach((childId){
+      var node = Node(id: int.parse(nodeMap['id']), data: nodeMap['data']);
+      nodeMap['children'].forEach((childId) {
         node.childrenIds.add(childId);
-      }); 
+      });
       nodes.add(node);
     });
     nodes.forEach((node1) {
       nodes.forEach((node2) {
-        
-        if(node1.childrenIds.contains(node2.id)){
+        if (node1.childrenIds.contains(node2.id)) {
           node1.addChild(node2);
         }
       });
     });
 
+    root = nodes[0];
     return nodes;
   }
 
-  // @override
-  // String toString() {
-  //   root.children.forEach((element) {
-  //     print(element);
-  //   });
-
-  //   return id.toString();
-  // }
+  @override
+  String toString() {
+    var text = root.data.toString() + '\n';
+    root.children.forEach((element) {
+      text += element.data + '\n';
+    });
+    return text;
+  }
 }
 
 class Node {
   Node parent;
-  List<Node> children= <Node>[];
+  List<Node> children = <Node>[];
   var id;
 
   final childrenIds = <int>[];
@@ -99,20 +89,26 @@ class Node {
   @override
   String toString() {
     // print(data);
-    return id.toString();
+    var text = 'id: ${id.toString()} \n';
+    text += 'data: ${data.toString()}\n';
+    children.forEach((child) {
+      text += 'child: ${child.id}\n';
+    });
+    // text += '\n';
+    return text;
   }
 
   dynamic data;
 
-  Node({List<Node> children, dynamic data='', int id = -1}) {
+  Node({List<Node> children, dynamic data = '', int id = -1}) {
     if (id != -1) {
       this.id = id;
     } else {
       this.id = MultipleDescendantTree.count++;
     }
-    if(children!=null){
+    if (children != null) {
       this.children = children;
-    }else{
+    } else {
       children = <Node>[];
     }
     this.data = data;
@@ -129,5 +125,4 @@ class Node {
     parent.children.remove(this);
     // Do something do remove node from memory
   }
-
 }
