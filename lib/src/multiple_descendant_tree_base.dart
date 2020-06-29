@@ -2,6 +2,8 @@ import 'dart:collection';
 
 import 'dart:convert';
 
+import 'package:uuid/uuid.dart';
+
 class MultipleDescendantTree {
   static var count = 0;
   Node root = Node(children: <Node>[], data: 'root');
@@ -51,7 +53,7 @@ class MultipleDescendantTree {
     final nodesMapList = json.decode(serialized);
     final nodes = <Node>[];
     nodesMapList.forEach((nodeMap) {
-      var node = Node(id: int.parse(nodeMap['id']), data: nodeMap['data']);
+      var node = Node(id: nodeMap['id'], data: nodeMap['data']);
       nodeMap['children'].forEach((childId) {
         node.childrenIds.add(childId);
       });
@@ -100,11 +102,11 @@ class Node {
 
   dynamic data;
 
-  Node({List<Node> children, dynamic data = '', int id = -1}) {
-    if (id != -1) {
+  Node({List<Node> children, dynamic data = '', String id = '-1'}) {
+    if (id != '-1') {
       this.id = id;
     } else {
-      this.id = MultipleDescendantTree.count++;
+      this.id = Uuid().v1();
     }
     if (children != null) {
       this.children = children;

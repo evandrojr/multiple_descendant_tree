@@ -17,7 +17,7 @@ void main() {
     final t = MultipleDescendantTree();
 
     Node nodeFactory() {
-      return Node(children: <Node>[], id: counter++);
+      return Node(children: <Node>[]);
     }
 
     // setUp(() {
